@@ -9,6 +9,10 @@ const  fetchUrlData=(url)=>{
     fetch(url)
     .then(res=>res.json())
     .then(data=>ViewMeal(data.meals))
+    .catch(err=>{
+        notFound('block','Something went worng!!! Please try again later');
+        toggleSpinner('none');
+    } );
 }
 
 loadMeal()
