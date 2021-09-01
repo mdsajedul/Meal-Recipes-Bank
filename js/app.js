@@ -14,8 +14,15 @@ const  fetchUrlData=(url)=>{
 loadMeal()
 
 function ViewMeal(data){
-    for(meal of data ){
-        mealPushInPage(meal)
+    if(data!=null){
+        for(meal of data ){
+            mealPushInPage(meal)
+            
+        }
+    }
+    else{
+        notFound('block','Not found!!! Please try a different meal!');
+        toggleSpinner('none');
     }
 }
 
@@ -36,15 +43,45 @@ function mealPushInPage(meal){
     </div>
     `;
     mealContainer.appendChild(div);
-
+    toggleSpinner('none')
+    notFound('none');
 }
 
+// not found message 
+const notFound = (displayStyle,errorMessage) =>{
+     const message =  document.getElementById('notFoundMessage');
+     message.innerText=errorMessage;
+     message.style.display=displayStyle;
+}
+// spinner 
+const toggleSpinner = displayStyle=>{
+    document.getElementById('spinner').style.display=displayStyle;
+}
+
+
+// search button function 
 document.getElementById('search-btn').addEventListener('click',function(){
     const mealInput = document.getElementById('meal-input');
     const mealInputString = mealInput.value;
-    mealSearch(mealInputString);
-    mealInput.value='';
+    notFound('none');
+    if(mealInputString !=''){
+        toggleSpinner('block');
+        mealSearch(mealInputString);
+        mealInput.value='';
+    }
+    else{
+        notFound('block','Input field is empty');
+    }
+
+
+    // spinner show 
+    // toggleSpinner('block');
+
+    // mealSearch(mealInputString);
+    // mealInput.value='';
 })
+
+
 
 const mealSearch = (mealName)=>{
     const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${mealName}`;
@@ -58,11 +95,15 @@ const mealSearch = (mealName)=>{
 document.getElementById('home-btn1').addEventListener('click',()=>{
     const mealContainer = document.getElementById('meal-container');
     mealContainer.textContent='';
+    notFound('none');
+    toggleSpinner('block');
     loadMeal();
 })
 document.getElementById('home-btn2').addEventListener('click',()=>{
     const mealContainer = document.getElementById('meal-container');
     mealContainer.textContent='';
+    notFound('none');
+    toggleSpinner('block');
     loadMeal();
 })
 
@@ -77,7 +118,6 @@ const mealDetailsInModal=(meal)=>{
 
     const mealTitle = document.getElementById('ModalLabel');
     mealTitle.innerText='';
-    console.log(meal.strMeal)
     mealTitle.innerText=meal.strMeal
 
     const modalBody = document.getElementById('modal-body');
